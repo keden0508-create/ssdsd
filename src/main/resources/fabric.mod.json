@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "cmdhelper",
+  "version": "1.0.0",
+  "name": "Command Helper",
+  "description": "긴 명령어 단축 + NBT/데이터 컴포넌트 설명 클라이언트 명령어",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.example.cmdhelper.CmdHelperClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "~26.3",
+    "fabric-api": "*"
+  },
+  "icon": "assets/cmdhelper/icon.png"
+}
