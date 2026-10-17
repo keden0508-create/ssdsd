@@ -1,1 +1,32 @@
-
+name: build
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - name: template
+        run: |
+          git clone --depth 1 https://github.com/FabricMC/fabric-example-mod /tmp/t
+          cd /tmp/t
+          cat gradle.properties
+          rm -rf src/main/java src/client/java src/main/resources/fabric.mod.json
+          cp "$GITHUB_WORKSPACE/src/main/resources/fabric.mod.json" src/main/resources/
+          cp -r "$GITHUB_WORKSPACE/src/main/resources/assets" src/main/resources/ || true
+          if [ -d src/client ]; then DEST=src/client/java; else DEST=src/main/java; fi
+          mkdir -p "$DEST" && cp -r "$GITHUB_WORKSPACE/src/main/java/." "$DEST/"
+          sed -i 's/^minecraft_version=.*/minecraft_version=26.3/' gradle.properties
+          sed -i 's/^fabric_version=.*/fabric_version=0.160.2+26.3/' gradle.properties
+          sed -i 's/^archives_base_name=.*/archives_base_name=cmdhelper/' gradle.properties
+      - name: build
+        run: cd /tmp/t && chmod +x gradlew && ./gradlew build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cmdhelper-jar
+          path: /tmp/t/build/libs/*.jar
