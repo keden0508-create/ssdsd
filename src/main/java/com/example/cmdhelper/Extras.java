@@ -148,38 +148,6 @@ public final class Extras {
             c.getSource().getClient().getConnection().sendChat("(╯°□°)╯︵ ┻━┻"); return 1;
         }));
 
-        // ── 위치 북마크 (게임 끄면 사라짐) ──
-        d.register(ClientCommands.literal("mark")
-            .then(ClientCommands.argument("name", StringArgumentType.word()).executes(c -> {
-                Player p = c.getSource().getPlayer();
-                String n = StringArgumentType.getString(c, "name");
-                MARKS.put(n, new Mark(p.getX(), p.getY(), p.getZ(), p.level().dimension().identifier().toString()));
-                msg(c.getSource(), "§a'" + n + "' 위치를 저장했습니다.");
-                return 1;
-            })));
-        d.register(ClientCommands.literal("marks").executes(c -> {
-            if (MARKS.isEmpty()) msg(c.getSource(), "§7저장된 위치가 없습니다. /mark 이름");
-            MARKS.forEach((k, v) -> msg(c.getSource(), "§b" + k + " §f" + f(v.x) + " " + f(v.y) + " " + f(v.z) + " §7(" + v.dim + ")"));
-            return 1;
-        }));
-        d.register(ClientCommands.literal("tpmark")
-            .then(ClientCommands.argument("name", StringArgumentType.word()).executes(c -> {
-                Mark m = MARKS.get(StringArgumentType.getString(c, "name"));
-                if (m == null) { msg(c.getSource(), "§c그 이름의 위치가 없습니다."); return 0; }
-                run(c.getSource(), "tp @s " + m.x + " " + m.y + " " + m.z);
-                return 1;
-            })));
-        d.register(ClientCommands.literal("unmark")
-            .then(ClientCommands.literal("all").executes(c -> {
-                MARKS.clear();
-                msg(c.getSource(), "§7저장된 위치를 모두 지웠습니다.");
-                return 1;
-            }))
-            .then(ClientCommands.argument("name", StringArgumentType.word()).executes(c -> {
-                MARKS.remove(StringArgumentType.getString(c, "name"));
-                msg(c.getSource(), "§7삭제했습니다.");
-                return 1;
-            })));
     }
 
     // ───────── helpers ─────────

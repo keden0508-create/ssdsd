@@ -64,6 +64,7 @@ public final class Tools {
             }
             for (String c : due) mc.getConnection().sendCommand(c);
 
+            if (tick % 20 == 0) Homes.refreshKey(mc);
             if (tick % 2 == 0) overlay(mc);
         });
     }
@@ -302,10 +303,10 @@ public final class Tools {
                 msg(c, "§a'" + n + "' 까지의 거리를 화면에 표시합니다. (/track off 로 종료)");
                 return 1;
             })));
-        d.register(ClientCommands.literal("stopwatch")
+        d.register(ClientCommands.literal("sw")
             .then(ClientCommands.literal("start").executes(c -> { watchStart = System.nanoTime(); watchLast = watchStart; msg(c, "§a스톱워치 시작"); return 1; }))
             .then(ClientCommands.literal("lap").executes(c -> {
-                if (watchStart < 0) { msg(c, "§7시작 전입니다. /stopwatch start"); return 0; }
+                if (watchStart < 0) { msg(c, "§7시작 전입니다. /sw start"); return 0; }
                 long now = System.nanoTime();
                 msg(c, "§e랩 §f" + fmtTime(now - watchLast) + " §7(누적 " + fmtTime(now - watchStart) + ")");
                 watchLast = now;
